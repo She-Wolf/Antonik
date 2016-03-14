@@ -1,4 +1,4 @@
-package com.project.antonik.android.Location;
+package com.project.antonik.tests.Location;
 
 /**
  * Created by GeneA on 08.03.2016.

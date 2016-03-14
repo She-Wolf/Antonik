@@ -54,15 +54,15 @@ public class MenuScreen implements Screen {
     	this.sc = sc;
     	textures = TextureHelper.getInstance();
     	camera = new OrthographicCamera();
-    	camera.setToOrtho(false, 1920, 1080);
+    	camera.setToOrtho(false, 1080, 1920);
     	//Две магические строчки, для адекватного растягивания под любой экран, насколько это вообще возможно
     	float screenMnozh = ((float)Gdx.graphics.getWidth()/(float)Gdx.graphics.getHeight())/(16f/9f);
-    	ExtendViewport viewp = new ExtendViewport(1920*screenMnozh, 1080, camera);
+    	ExtendViewport viewp = new ExtendViewport(1080*screenMnozh, 1920, camera);
     	Sb = new SpriteBatch();
     	stage = new Stage(viewp, Sb);
     	BackgroundInit();
     	for(int i=0; i<5; i++) {
-    		ButtonInit((int)(camera.viewportWidth/2-textures.BUTTON_WIDTH/2), 865-200*i , textures.buttonsTR[i], i);
+    		ButtonInit((int)(camera.viewportWidth/2-textures.BUTTON_WIDTH/2), 1550-250*i , textures.buttonsTR[i], i);
     	}
     }
 

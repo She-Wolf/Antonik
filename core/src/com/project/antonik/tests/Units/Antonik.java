@@ -1,4 +1,4 @@
-package com.project.antonik.android.Units;
+package com.project.antonik.tests.Units;
 
 /**
  * Created by GeneA on 08.03.2016.
@@ -23,11 +23,11 @@ public class Antonik extends Unit {
     public void moveLeft() { }
     public void moveDown() { }
 
-    public boolean hasMoveUp() { } //проверка возможности ходить
+   /* public boolean hasMoveUp() { } //проверка возможности ходить
     public boolean hasMoveRight() { }
     public boolean hasMoveLeft() { }
     public boolean hasMoveDown() { }
 
     public Boolean inspectOpportunity() {  } // проверяет, может ли кого-нибудь шманать Антоник, т.е. есть ли студент рядом
-
+*/
 }

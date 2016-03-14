@@ -1,19 +1,15 @@
-package java;
-
-import com.project.antonik.android.Location.Map;
-import com.project.antonik.android.Location.Position;
-import com.project.antonik.android.Location.Size;
-import com.project.antonik.android.Location.Table;
-import com.project.antonik.android.Units.Antonik;
-import com.project.antonik.android.Units.Student;
-
+package com.project.antonik.tests;
+/*
 import static org.junit.Assert.assertEquals;
-
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.Test;*/
+
+import com.project.antonik.tests.Location.Map;
+import com.project.antonik.tests.Units.Antonik;
+import com.project.antonik.tests.Units.Student;
 
 public class Tests {
-
+/*
     Map map;
     Antonik antonik;
     Student student_1;
@@ -127,5 +123,5 @@ public class Tests {
         map = new Map(0, 0);
     }
 
-
+*/
 }

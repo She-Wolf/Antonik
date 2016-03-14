@@ -1,4 +1,4 @@
-package com.project.antonik.android.Units;
+package com.project.antonik.tests.Units;
 
 /**
  * Created by GeneA on 08.03.2016.
@@ -12,8 +12,8 @@ public class Student extends Unit {
         this.disguise = disguise;  //навык маскировки
     }
 
-    public Boolean inspectOpportunity() { }  //может лди шманаться сейчас игрок? Шмон может вестись из любой из 8 соседник клеток
-
+    /*public Boolean inspectOpportunity() { }  //может лди шманаться сейчас игрок? Шмон может вестись из любой из 8 соседник клеток
+*/
     public int disguise; //навык маскировки
 
     public Boolean writeOffNowState = false; //списывает ли мейчас игрок?
