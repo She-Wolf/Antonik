@@ -6,13 +6,38 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.project.antonik.sapper.CellTexture;
+import com.project.antonik.sapper.GameField;
 
 public class GameScreen implements Screen {
+	
+	class SapperListener extends ClickListener {
+		@Override
+	    public void clicked(InputEvent event, float x, float y) {
+				int w=(int)(x/40);
+				int h=(int)(y/40);
+				if(field.mines == null) field.fillMines(w, h);
+				int state=field.mines[w][h]+2;
+				if (state == 2) {
+					openCell(w,h);
+				} else if (state == 11){
+					for (int i=0; i < field.WIDTH; i++ ) {
+						for (int j=0; j < field.HEIGHT; j++ ) {
+							if (field.mines[i][j] == 9) field.states[i][j] = field.mines[i][j]+2;
+						}
+					}
+					field.states[w][h] = 13;	
+				} else field.states[w][h] = state;
+			}
+	}
 	
     private SpriteBatch batch; 
     static Stage stage;  //сцена
@@ -20,7 +45,10 @@ public class GameScreen implements Screen {
     public TextureHelper textures;
     public AnimationHelper animations;
     private OrthographicCamera camera;
+    GameField field;
     CustomActor items[];
+    Sprite floor;
+    
     public GameScreen(SpriteBatch batch, ScreenController sc) {
     	GameScreen.sc = sc;
     	this.batch = batch;
@@ -32,6 +60,8 @@ public class GameScreen implements Screen {
     @Override
 	public void show() {
 		textures = TextureHelper.getInstance();
+		field = GameField.getInstance();
+		field.fillStates();
 		AnimationHelper.initInstance();
 		animations = AnimationHelper.getInstance();
 		animations.initAnimations();
@@ -40,6 +70,8 @@ public class GameScreen implements Screen {
    		ExtendViewport viewp = new ExtendViewport(540, 960, camera);
    		stage = new Stage(viewp); 
    		Gdx.input.setInputProcessor(stage);
+   		fillField ();
+   		stage.addListener(new SapperListener());
    		loadLevel();
 	}
     
@@ -51,10 +83,10 @@ public class GameScreen implements Screen {
     	textures.floor[level.back].setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
     	TextureRegion imgTextureRegion = new TextureRegion(textures.floor[level.back]);
     	imgTextureRegion.setRegion(0,0,textures.floor[level.back].getWidth()*12, textures.floor[level.back].getHeight()*20);
-    	CustomActor floor = new CustomActor (imgTextureRegion);
-    	floor.setSize(floor.tr.getRegionWidth(), floor.tr.getRegionHeight());
+    	floor = new Sprite (imgTextureRegion);
+    	floor.setSize(imgTextureRegion.getRegionWidth(), imgTextureRegion.getRegionHeight());
     	floor.setPosition(0, 0);
-    	stage.addActor(floor);
+    	
     	for (int i=0; i < level.items.size(); i++) {
     		initItem(level.items.get(i));	
     	}
@@ -69,6 +101,41 @@ public class GameScreen implements Screen {
     	stage.addActor(actor);	
     }
     
+    /** Отрисовать поле */
+	public void fillField (){
+		for (int i=0; i<field.WIDTH; i++){
+			for (int j=0; j<field.HEIGHT; j++){
+				createCell(textures.sapperTR[0],40*i, 40*j, i, j);
+			}
+		}
+	}
+	
+	/** Открыть ячейку на игровом поле */
+	public void openCell(int w, int h) {
+		int state=field.mines[w][h]+2;
+		int oldState = field.states[w][h];
+		field.states[w][h] = state;
+		if (state==2 && oldState==0) {
+			if (w-1!=-1 && h-1!=-1) openCell(w-1,h-1);
+			if (h-1!=-1) openCell(w,h-1);
+			if (w+1!=field.WIDTH && h-1!=-1) openCell(w+1,h-1);
+			if (w-1!=-1) openCell(w-1,h);
+			if (w+1!=field.WIDTH) openCell(w+1,h);
+			if (w-1!=-1 && h+1!=field.HEIGHT) openCell(w-1,h+1);
+			if (h+1!=field.HEIGHT) openCell(w,h+1);
+			if (w+1!=field.WIDTH && h+1!=field.HEIGHT) openCell(w+1,h+1);
+		} 
+	}
+	
+	public void createCell(TextureRegion tr, int x, int y, int w, int h){
+		CellTexture cell = new CellTexture();
+		cell.setSize(40,40);
+		cell.setPosition(x, y);
+	    stage.addActor(cell);
+	    cell.w = w;
+	    cell.h = h;
+    }
+    
     /**
      * Рендеринг сцены
      */
@@ -76,7 +143,9 @@ public class GameScreen implements Screen {
     public void render(float delta) {
     	Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //Все действия с любыми актерами будут тут
+        batch.begin();
+        floor.draw(batch);
+        batch.end();
         stage.act(Gdx.graphics.getDeltaTime());
     	stage.draw();
     }

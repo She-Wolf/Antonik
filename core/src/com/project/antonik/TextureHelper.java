@@ -7,18 +7,18 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-
 /** Все текстуры и их текстурРегионы находятся тут */
 public class TextureHelper {
 	//Текстуры
 	private static TextureHelper textureHelper;
 	public Texture menuButtonsTexture; //Кнопки меню
 	public Texture menuBackgroundTexture; //Бэкгрануд меню
-	public Texture floor[]; //Текстуры пола
+	public Texture floor[]; 
 	public Texture table;
 	public Texture student;
+	public Texture sapper;	
 	//Регионы
-	public TextureRegion[] buttonsTR; //Кнопки меню
+	public TextureRegion[] buttonsTR, sapperTR;
 	BitmapFont font;
 	//Блок констант
 	final int BUTTON_WIDTH = 600;
@@ -29,13 +29,17 @@ public class TextureHelper {
 	public static void initInstance() { textureHelper = new TextureHelper(); textureHelper.initTextures(); }
 	public static TextureHelper getInstance() { return textureHelper;}
 	
-	/** Загрузка текстур */
+	/**
+	 * Загрузка текстур 
+	 */
 	public void initTextures() {
 		loadFont();
 		loadTextures();
 		loadTextureRegions();
 	}
-	/** Выгрузка текстур */
+	/**
+	 * Выгрузка текстур
+	 */
 	public void disposeAll() {
 		menuButtonsTexture.dispose();
 		menuBackgroundTexture.dispose();
@@ -54,30 +58,44 @@ public class TextureHelper {
         generator.dispose();
 	}
 	
-	/** Загрузка текстур */
-	private void loadTextures() {	
+	/**
+	 * Загрузка текстур
+	 */
+	private void loadTextures() {
+	    floor = new Texture [3];
 		menuButtonsTexture = loadTexture("images/buttons.png");
     	menuBackgroundTexture = new Texture("images/background.jpg");
-    	floor = new Texture[3];
-    	for(int i=0; i<3; i++) {
-    		floor[i] = new Texture("images/floor"+ (i+1) +".png");
+    	for (int i=0; i<3; i++){
+    		floor[i] = new Texture("images/floor"+(i+1)+".png");
     	}
     	table = new Texture("images/table.png");
     	student = new Texture("images/student.png");
+    	sapper = new Texture("images/graphic.png");
     	
 	}
-	/** Разбиение текстур на регионы */
+	/**
+	 * Разбиение текстур на регионы
+	 */
 	private void loadTextureRegions() {
 		buttonsTR = new TextureRegion[BUTTONS_NUMBER];
 		for (int i = 0; i < BUTTONS_NUMBER; i++) {
 			buttonsTR[i] = new TextureRegion(menuButtonsTexture, 0, BUTTON_HEIGHT*i, BUTTON_WIDTH, BUTTON_HEIGHT);
-		}	
+		}
+		createSapperTR();
 	}
-	
 	/** Загрузка и фильтрация текстуры */
 	private Texture loadTexture(String path) {
 		Texture texture = new Texture(Gdx.files.internal(path), true);
 		texture.setFilter(Texture.TextureFilter.MipMapLinearNearest, Texture.TextureFilter.Nearest);
 		return texture;
+	}
+	
+	public void createSapperTR(){
+		sapperTR = new TextureRegion [16];
+		for (int i=0; i<4; i++){
+			for (int j=0; j<4; j++){
+				sapperTR [4*i+j]= new TextureRegion(sapper, 40*j, 40*i, 40, 40);
+			}
+		}
 	}
 }
