@@ -1,5 +1,10 @@
 package com.project.antonik.tests.Units;
 
+import com.project.antonik.tests.AI.Move;
+import com.project.antonik.tests.Location.World;
+
+import java.util.List;
+
 /**
  * Created by GeneA on 08.03.2016.
  */
@@ -34,4 +39,8 @@ public class Student extends Unit {
 
     public void arrested() { } //рест игрока, Антоник рад
 
+    @Override
+    public List<Move> getLegalMoves(){
+        return World.getLegalMovesStudent(this);
+    }
 }

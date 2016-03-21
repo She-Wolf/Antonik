@@ -1,5 +1,10 @@
 package com.project.antonik.tests.Units;
 
+import com.project.antonik.tests.AI.Move;
+import com.project.antonik.tests.Location.World;
+
+import java.util.List;
+
 /**
  * Created by GeneA on 08.03.2016.
  */
@@ -23,6 +28,11 @@ public class Antonik extends Unit {
     public void moveLeft() { }
     public void moveDown() { }
 
+
+    @Override
+    public List<Move> getLegalMoves(){
+        return World.getLegalMovesAntonik();
+    }
    /* public boolean hasMoveUp() { } //проверка возможности ходить
     public boolean hasMoveRight() { }
     public boolean hasMoveLeft() { }
