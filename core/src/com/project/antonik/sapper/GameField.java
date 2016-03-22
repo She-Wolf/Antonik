@@ -4,7 +4,7 @@ package com.project.antonik.sapper;
 public class GameField  {
 	public int mines[][];
 	public int states[][];
-	public boolean isGame;
+	public boolean press=true;
 	
 	//Блок констант
 	public int WIDTH = 12; 

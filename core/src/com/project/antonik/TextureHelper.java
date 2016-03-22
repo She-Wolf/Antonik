@@ -16,7 +16,8 @@ public class TextureHelper {
 	public Texture floor[]; 
 	public Texture table;
 	public Texture student;
-	public Texture sapper;	
+	public Texture sapper;
+	public Texture btStart;
 	//Регионы
 	public TextureRegion[] buttonsTR, sapperTR;
 	BitmapFont font;
@@ -71,6 +72,7 @@ public class TextureHelper {
     	table = new Texture("images/table.png");
     	student = new Texture("images/student.png");
     	sapper = new Texture("images/graphic.png");
+    	btStart = new Texture("images/bts.png");
     	
 	}
 	/**

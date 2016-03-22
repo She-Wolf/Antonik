@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.project.antonik.MenuScreen.SingleGameListener;
 import com.project.antonik.sapper.CellTexture;
 import com.project.antonik.sapper.GameField;
 
@@ -22,22 +23,39 @@ public class GameScreen implements Screen {
 	class SapperListener extends ClickListener {
 		@Override
 	    public void clicked(InputEvent event, float x, float y) {
-				int w=(int)(x/40);
-				int h=(int)(y/40);
-				if(field.mines == null) field.fillMines(w, h);
-				int state=field.mines[w][h]+2;
-				if (state == 2) {
-					openCell(w,h);
-				} else if (state == 11){
-					for (int i=0; i < field.WIDTH; i++ ) {
-						for (int j=0; j < field.HEIGHT; j++ ) {
-							if (field.mines[i][j] == 9) field.states[i][j] = field.mines[i][j]+2;
+			  if (x<480&&y<320&&field.press==false){
+				  int w=(int)(x/40);
+					int h=(int)(y/40);
+					if(field.mines == null) field.fillMines(w, h);
+					int state=field.mines[w][h]+2;
+					if (state == 2) {
+						openCell(w,h);
+					} else if (state == 11){
+						for (int i=0; i < field.WIDTH; i++ ) {
+							for (int j=0; j < field.HEIGHT; j++ ) {
+								if (field.mines[i][j] == 9) field.states[i][j] = field.mines[i][j]+2;
+							}
 						}
-					}
-					field.states[w][h] = 13;	
-				} else field.states[w][h] = state;
+						field.states[w][h] = 13;
+						field.press=true;
+					} else field.states[w][h] = state;
+			  }
+			
 			}
 	}
+	
+	class ButtonMGameListener extends ClickListener {
+		@Override
+	    public void clicked(InputEvent event, float x, float y) {
+			if (field.press==true){
+				fillField();
+				field.mines=null;
+				field.fillStates();
+				field.press=false;
+			}
+			
+	    }
+	 }
 	
     private SpriteBatch batch; 
     static Stage stage;  //сцена
@@ -65,15 +83,25 @@ public class GameScreen implements Screen {
 		AnimationHelper.initInstance();
 		animations = AnimationHelper.getInstance();
 		animations.initAnimations();
-   		float screenMnozh = ((float)Gdx.graphics.getWidth()/(float)Gdx.graphics.getHeight())/(16f/9f);
-   		camera = new OrthographicCamera(540*screenMnozh, 960);
-   		ExtendViewport viewp = new ExtendViewport(540, 960, camera);
+   		float screenMnozh = ((float)Gdx.graphics.getWidth()/(float)Gdx.graphics.getHeight())/(9f/16f);
+   		camera = new OrthographicCamera(540, 960);
+   		ExtendViewport viewp = new ExtendViewport(540, 960/screenMnozh, camera);
    		stage = new Stage(viewp); 
    		Gdx.input.setInputProcessor(stage);
-   		fillField ();
-   		stage.addListener(new SapperListener());
+   		buttonStartGame();
    		loadLevel();
+   		stage.addListener(new SapperListener());
+   		
 	}
+    
+    public void buttonStartGame (){
+    	CustomActor sButton = new CustomActor(textures.btStart);
+    	sButton.setSize((int)(textures.btStart.getWidth()) , (int)(textures.btStart.getHeight()));
+    	sButton.setPosition(480, 0);
+    	sButton.addListener(new ButtonMGameListener());
+    	stage.addActor(sButton);
+    	
+    }
     
     /** Загрузка уровня из json*/
     public void loadLevel() {
@@ -124,7 +152,7 @@ public class GameScreen implements Screen {
 			if (w-1!=-1 && h+1!=field.HEIGHT) openCell(w-1,h+1);
 			if (h+1!=field.HEIGHT) openCell(w,h+1);
 			if (w+1!=field.WIDTH && h+1!=field.HEIGHT) openCell(w+1,h+1);
-		} 
+		}
 	}
 	
 	public void createCell(TextureRegion tr, int x, int y, int w, int h){
